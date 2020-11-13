@@ -10,10 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Container from "@material-ui/core/Container";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -26,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     form: {
       "& .MuiTextField-root": {
         margin: theme.spacing(1),
-        //   width: 300,
       },
     },
     textArea: {
@@ -35,63 +30,56 @@ const useStyles = makeStyles((theme) => ({
     },
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 200,
+      minWidth: 600,
     },
     singleSpace: {
       margin: theme.spacing(1),
     },
+    root: {
+        '& > *': {
+          margin: theme.spacing(1),
+        },
+    }
   }));
   const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
   
 
-function StorageDriveForm({open, close}) {
+function StorageDriveForm({storage_drive, open, close, isNew }) {
 
      const style = useStyles();
-    // const [value, setValue] = React.useState({
-    //   name: "",
-    //   category: "",
-    //   description: "",
-    //   company: "",
-    // });
-    // const [updateSeries] = useMutation(UPDATE_SERIES);
-    // const { _id } = series;
-    // const handleSubmit = (e) => {
-    //   e.preventDefault();
-    // //   updateSeries({
-    // //     variables: {
-    // //       id: _id,
-    // //       series: value,
-    // //     },
-    // //   })
-    // //     .then((data) => {
-    // //     //   refetch();
-    // //     //   close();
-    // //     })
-    // //     .catch((e) => {
-    // //       console.log(e);
-    // //     });
-    // };
+    const [value, setValue] = React.useState({
+      name: "",
+      capacity: "",
+      seq_read: "",
+      seq_write: "",
+      pwr: "",
+      interface_type: "",
+    });
+    const handleSubmit = (e) => {
+      e.preventDefault();
+    console.log(value);
+    };
   
-    // const handleChange = (e) => {
-    //   setValue({ ...value, [e.target.name]: e.target.value });
-    // };
+    const handleChange = (e) => {
+      setValue({ ...value, [e.target.name]: e.target.value });
+    };
   
-    // const onDialogOpen = () => {
-    //   setValue({
-    //     name: series.name,
-    //     category: series.category,
-    //     description: series.description,
-    //     company: series.company ? series.company._id : "",
-    //   });
-   // };
-  
-
-
+    const onDialogOpen = () => {
+      setValue({
+        name: isNew? "" : storage_drive.name,
+        capacity: isNew? "" : storage_drive.capacity,
+        seq_read: isNew? "": storage_drive.seq_read,
+        seq_write: isNew? "" : storage_drive.seq_write,
+        pwr: isNew? "" : storage_drive.pwr,
+        interface_type: isNew? "" : storage_drive.interface_type
+      });
+    console.log(storage_drive);
+   };
     return (
         <Dialog
-        // onEnter={onDialogOpen}
+        onEnter={onDialogOpen}
         open={open}
         onClose={close}
         aria-labelledby="form-dialog-title"
@@ -109,13 +97,13 @@ function StorageDriveForm({open, close}) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={style.title}>
-              {/* {`Update - ${series._id}`} */}
+              { isNew ? "Add New Item" : `Update - ${storage_drive._id}`}
             </Typography>
             <Button
               autoFocus
               type="submit"
               color="inherit"
-            //   onClick={handleSubmit}
+              onClick={handleSubmit}
             >
               save
             </Button>
@@ -126,68 +114,76 @@ function StorageDriveForm({open, close}) {
         <br />
   
         <Container maxWidth="md">
-          {/* <form onSubmit={handleSubmit} className={style.form}>
-            <div>
-              <TextField
-                label="name"
-                name="name"
-                value={value.name}
-                onChange={handleChange}
-              />
-  
-              <FormControl className={style.formControl}>
-                <InputLabel id="series_category">Category</InputLabel>
-                <Select
-                  name="category"
-                  onChange={handleChange}
-                  labelId="series_category"
-                  value={value.category}
-                >
-                  {p_category.map((item, index) => (
-                    <MenuItem key={index} value={item.name}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-  
-              <FormControl className={style.formControl}>
-                <InputLabel id="series_company">Company</InputLabel>
-                <Select
-                  name="company"
-                  labelId="series_company"
-                  onChange={handleChange}
-                  value={value.company}
-                >
-                  {p_company.map((c, index) => (
-                    <MenuItem key={index} value={c._id}>
-                      {c.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className={style.textArea}>
-              <TextField
-                placeholder="Description"
-                multiline
-                fullWidth
-                rows={5}
-                label="Description"
-                onChange={handleChange}
-                name="description"
-                value={value.description}
-              />
-            </div>
-            <div className={style.singleSpace}>
-              <Button type="submit" variant="outlined" color="primary">
-                Update
-              </Button>
-              <Button onClick={close} variant="outlined">
-                Cancel
-              </Button>
-            </div>
-          </form> */}
+            <form className={style.form}>
+                <div>
+                    <TextField
+                    label="Name"
+                    name="name"
+                    value={value.name}
+                    onChange={handleChange}
+                    fullWidth
+                    size="small"
+                    />
+                </div>
+                <div>
+                    <TextField
+                        label="Storage Capacity"
+                        name="capacity"
+                        value={value.capacity}
+                        onChange={handleChange}
+                        fullWidth
+                        size="small"
+                        />
+                </div>
+                <div>
+                    <TextField
+                        label="Max Read MB/s"
+                        name="seq_read"
+                        value={value.seq_read}
+                        onChange={handleChange}
+                        fullWidth
+                        size="small"
+                        />
+                </div>
+                <div>
+                    <TextField
+                            label="Max Write MB/s"
+                            name="seq_write"
+                            value={value.seq_write}
+                            onChange={handleChange}
+                            fullWidth
+                            size="small"
+                            />
+                </div>
+                <div>
+                    <TextField
+                            label="Power Consumption"
+                            name="pwr"
+                            value={value.pwr}
+                            onChange={handleChange}
+                            fullWidth
+                            size="small"
+                            />
+                </div>
+                <div>
+                    <TextField
+                            label="Interface Type"
+                            name="interface_type"
+                            value={value.interface_type}
+                            onChange={handleChange}
+                            fullWidth
+                            size="small"
+                            />
+                </div>
+                <div className={style.root}>
+                    <Button type="submit" onClick={handleSubmit} variant="outlined" color="primary">
+                     {isNew ? "Add" : "Update"}
+                    </Button>
+                    <Button onClick={close} variant="outlined">
+                    Cancel
+                    </Button>
+                </div>
+            </form>
         </Container>
       </Dialog>
     )

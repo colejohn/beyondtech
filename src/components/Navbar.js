@@ -28,22 +28,13 @@ function Navbar() {
     <nav>
       <AppBar position="static" color="default">
         <Toolbar>
-          {/* <IconButton
-    edge="start"
-    className={classes.menuButton}
-    color="inherit"
-    aria-label="menu"
-    >
-    <MenuIcon />
-  </IconButton> */}
           <Typography
             variant="h6"
             to="/"
             className={classes.title}
           >
             Beyond Tech
-          </Typography>
-          {/* <Button color="inherit">Login</Button> */}
+          </Typography> 
         </Toolbar>
       </AppBar>
     </nav>
