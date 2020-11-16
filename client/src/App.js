@@ -7,19 +7,9 @@ import Navbar from './components/Navbar'
 import { makeStyles } from '@material-ui/core/styles';
 import StorageDrive from './components/StorageDrive'
 import StorageDriveForm from './components/StorageDriveForm'
-
 import { useQuery } from "@apollo/react-hooks";
-
-import gql from "graphql-tag";
-export const GET_INITIAL_DATA = gql`
-  query {
-    all_storage {
-      _id
-      name
-    
-    }
-  }
-`;
+import { useMutation } from '@apollo/react-hooks'
+import {GET_ALL_STORAGE_DRIVE, UPDATE_STORAGE_DRIVE} from './graphql/storage_drive'
 
 const useStyles = makeStyles((theme) =>({
   fab: {
@@ -30,24 +20,18 @@ const useStyles = makeStyles((theme) =>({
   },
 }));
 
-const storage_drive = [
-  { _id: 1, name: "Samsung 970 Evo Plus NVMe PCIe", capacity: "1TB", seq_read: "3,500MB/s", seq_write: "3,200MB/s", pwr:"9 W", interface_type: "PCIe Gen 3.0 x 4, NVMe 1.3"},
-  { _id: 2, name: "870 QVO ", capacity: "2TB", seq_read: "560 MB/s", seq_write: "530 MB/s", pwr:"50 mW", interface_type: "SATA III"}
 
-]
 function App() {
 
-
   const { loading, error, data, refetch, networkStatus } = useQuery(
-    GET_INITIAL_DATA
+    GET_ALL_STORAGE_DRIVE
   );
+  const [updateStorageDrive] = useMutation(UPDATE_STORAGE_DRIVE);
+
   const classes = useStyles();
   const [open, setOpen ] = React.useState(false);
   const [isNew, setIsNew ] = React.useState(true);
-  const [storage, setStorage ] = React.useState(storage_drive);
   const [updateitem, setUpdateItem ] = React.useState({});
-
-
 
   const openAddItem = () => {
     setIsNew(true);
@@ -60,20 +44,39 @@ function App() {
   }
 
   const handleUpdate = (id) => {
+  const { all_storage } = data;
 
-    const newUpdateItem = storage.find((item) => id === item._id);
+    const newUpdateItem = all_storage.find((item) => id === item._id);
     setUpdateItem(newUpdateItem)
     setIsNew(false);
     setOpen(true);
   }
 
+  const update_storage_drive =(id, data) =>{
+    updateStorageDrive({
+      variables:{
+        id: id,
+        storage: {
+          name: data.name,
+          capacity: data.capacity,
+          seq_read: data.seq_read,
+          seq_write: data.seq_write,
+          power: data.power,
+          interface_type: data.interface_type
+        }
+      }
+    }).then((data)=>{
+      console.log(data);
+    }).catch((e)=>{
+      console.log(e);
+    })
+  }
+
   if (error) return <p>Error :( </p>;
-    if (loading) {
+  if (networkStatus === 4) return "Refetching!";
+  if (loading) {
       return <p>Loading...</p>;
     }
-    if (networkStatus === 4) return "Refetching!";
-    console.log(data);
-  
 
   return (
     <div className="App">
@@ -81,9 +84,9 @@ function App() {
         <Container fixed>
           <br />
           <br />
-        <StorageDrive storage_drive={storage} update={handleUpdate} />
+        <StorageDrive refresh={refetch} storage_drive={data} update={handleUpdate} />
       </Container>
-      <StorageDriveForm storage_drive={updateitem} isNew={isNew} open={open} close={handleClose} />
+      <StorageDriveForm update={update_storage_drive} refresh={refetch} storage_drive={updateitem} isNew={isNew} open={open} close={handleClose} />
       <Fab size="large" color="primary" aria-label="add" onClick={openAddItem} className={classes.fab}>
           <AddIcon />
       </Fab>

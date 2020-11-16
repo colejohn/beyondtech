@@ -6,9 +6,25 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Button from "@material-ui/core/Button";
+import { useMutation } from '@apollo/react-hooks'
+import { DELETE_STORAGE_DRIVE } from '../graphql/storage_drive'
 
-function StorageItem({ id, name, capacity, seq_read, seq_write, pwr, interface_type, update }) {
+function StorageItem({ refresh, id, name, capacity, seq_read, seq_write, pwr, interface_type, update }) {
+
+    const [deleteStorageDrive ] = useMutation(DELETE_STORAGE_DRIVE)
+
     const handleDelete = (e) => {
+      deleteStorageDrive({
+        variables:{
+          id
+        }
+      }).then((data)=>{
+        console.log(data)
+        refresh();
+      }).catch((e)=>{
+        console.error(e);
+      })
+
     };
     const handleItemUpdate = () => {
       update(id);
@@ -33,7 +49,8 @@ function StorageItem({ id, name, capacity, seq_read, seq_write, pwr, interface_t
     );
   }
 
-function StorageDrive({update, storage_drive }) {
+function StorageDrive({ refresh, update, storage_drive }) {
+  const { all_storage } = storage_drive;
     return (
         <Paper>
         <Table>
@@ -49,16 +66,17 @@ function StorageDrive({update, storage_drive }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {storage_drive.map((item) => {
+            {all_storage.map((item) => {
               return (
                 <StorageItem
+                  refresh={refresh}
                   key={item._id}
                   id={item._id}
                   name={item.name}
                   capacity={item.capacity}
                   seq_read={item.seq_read}
                   seq_write={item.seq_write}
-                  pwr={item.pwr}
+                  pwr={item.power}
                   interface_type={item.interface_type}
                   update={update}
                 ></StorageItem>

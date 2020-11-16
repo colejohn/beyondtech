@@ -11,6 +11,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import Container from "@material-ui/core/Container";
 
+import { useMutation } from '@apollo/react-hooks'
+import { CREATE_STORAGE_DRIVE } from '../graphql/storage_drive'
+
+
 const useStyles = makeStyles((theme) => ({
     appBar: {
       position: "relative",
@@ -46,20 +50,39 @@ const useStyles = makeStyles((theme) => ({
   });
   
 
-function StorageDriveForm({storage_drive, open, close, isNew }) {
+function StorageDriveForm({update,refresh, storage_drive, open, close, isNew }) {
 
-     const style = useStyles();
+    const [createStorageDrive] = useMutation(CREATE_STORAGE_DRIVE);
+
+    const style = useStyles();
     const [value, setValue] = React.useState({
+      _id: "",
       name: "",
       capacity: "",
       seq_read: "",
       seq_write: "",
-      pwr: "",
+      power: "",
       interface_type: "",
     });
     const handleSubmit = (e) => {
       e.preventDefault();
-    console.log(value);
+      if(isNew){
+        createStorageDrive({
+          variables: {
+            storage: value
+          }
+        }).then((data)=>{
+          console.log(data);
+        }).catch((e)=>{
+          console.error(e);
+        })
+      }else{
+        const id = value._id;
+         console.log(id)
+         update(id, value);
+      }
+      refresh();
+      close();
     };
   
     const handleChange = (e) => {
@@ -68,14 +91,14 @@ function StorageDriveForm({storage_drive, open, close, isNew }) {
   
     const onDialogOpen = () => {
       setValue({
+        _id: isNew ? "" : storage_drive._id,
         name: isNew? "" : storage_drive.name,
         capacity: isNew? "" : storage_drive.capacity,
         seq_read: isNew? "": storage_drive.seq_read,
         seq_write: isNew? "" : storage_drive.seq_write,
-        pwr: isNew? "" : storage_drive.pwr,
+        power: isNew? "" : storage_drive.power,
         interface_type: isNew? "" : storage_drive.interface_type
       });
-    console.log(storage_drive);
    };
     return (
         <Dialog
@@ -158,8 +181,8 @@ function StorageDriveForm({storage_drive, open, close, isNew }) {
                 <div>
                     <TextField
                             label="Power Consumption"
-                            name="pwr"
-                            value={value.pwr}
+                            name="power"
+                            value={value.power}
                             onChange={handleChange}
                             fullWidth
                             size="small"

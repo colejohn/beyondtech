@@ -40,14 +40,16 @@ export default {
             _id, storage
         }, context, info) => {
             return new Promise((resolve, reject) => {
-                StorageDrive.findOneAndUpdate(_id,{
+                StorageDrive.findByIdAndUpdate(_id,{
                     $set: {
                         ...storage
                     }
                 }, {
                     new: true
                 }).exec((err, res)=>{
+                    console.log(_id);
                     err ? reject(err): resolve(res);
+                    
                 })
             })
         },

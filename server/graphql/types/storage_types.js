@@ -19,6 +19,7 @@ export default `
         updateStorageDrive( _id: String!, storage: UpdateStorageDriveInput! ): StorageDrive!
         deleteStorageDrive( _id: String! ): StorageDrive!
     }
+    
     input CreateStorageDriveInput {
         name: String!
         capacity: String!
