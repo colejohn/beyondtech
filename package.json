@@ -4,7 +4,8 @@
   "description": "beyond tech project",
   "main": "index.js",
   "scripts": {
-    "client": "npm start --prefix client"
+    "client": "npm start --prefix client",
+    "server": "nodemon --exec babel-node ./server/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,29 @@
   "bugs": {
     "url": "https://github.com/colejohn/beyondtech/issues"
   },
-  "homepage": "https://github.com/colejohn/beyondtech#readme"
+  "homepage": "https://github.com/colejohn/beyondtech#readme",
+  "dependencies": {
+    "nodemon": "^2.0.6",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15.4.0",
+    "graphql-tools": "^7.0.1",
+    "graphql-yoga": "^1.18.3",
+    "merge-graphql-schemas": "^1.7.8",
+    "mongoose": "^5.10.14"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/plugin-transform-async-to-generator": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.1",
+    "core-js": "^3.7.0",
+    "dotenv": "^8.2.0"
+  }
 }
