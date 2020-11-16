@@ -4,7 +4,7 @@ import { ObjectID } from "mongodb";
 const Schema = mongoose.Schema;
 
 ObjectID.prototype.valueOf = function () {
-  return this.totring();
+  return this.toString();
 };
 
 const StorageDriveSchema = new Schema({
