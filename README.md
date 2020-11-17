@@ -16,6 +16,10 @@ Install front-end dependencies by
 cd btech/client && npm install
 ```
 
+## Environment
+
+Please Edit `.env file` and add you MongoDB URI
+
 ### `npm run client`
 
 Runs the app client in the development mode.\
